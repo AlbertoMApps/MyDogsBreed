@@ -3,6 +3,8 @@ package com.alberto.mydogsbreed.di
 import android.util.Log
 import com.alberto.mydogsbreed.data.common.DOGS_API_BASE_URL
 import com.alberto.mydogsbreed.data.remote.api.DogsApi
+import com.alberto.mydogsbreed.data.repository.DogsRepositoryImplementation
+import com.alberto.mydogsbreed.domain.DogsRepositoryService
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -65,5 +67,14 @@ object DogsModule {
         logging.level = HttpLoggingInterceptor.Level.BODY
         return logging
     }
+
+    @Provides
+    @Singleton
+    fun provideDogsRepositoryImplementation(
+        api: DogsApi
+    ): DogsRepositoryService =
+        DogsRepositoryImplementation(
+            api
+        )
 
 }

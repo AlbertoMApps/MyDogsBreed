@@ -1,6 +1,6 @@
 package com.alberto.mydogsbreed.data.remote.model
 
-data class DogsInfo(
+data class Message(
     val affenpinscher: ArrayList<String> = arrayListOf(),
     val african: ArrayList<String> = arrayListOf(),
     val airedale: ArrayList<String> = arrayListOf(),

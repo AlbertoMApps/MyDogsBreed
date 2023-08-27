@@ -1,6 +1,7 @@
 package com.alberto.mydogsbreed.data.repository
 
 import com.alberto.mydogsbreed.data.remote.api.DogsApi
+import com.alberto.mydogsbreed.data.remote.model.DogBreed
 import com.alberto.mydogsbreed.data.remote.model.Message
 import com.alberto.mydogsbreed.domain.DogsRepositoryService
 import com.alberto.mydogsbreed.utils.Resource
@@ -126,6 +127,24 @@ class DogsRepositoryImplementation @Inject constructor(
                 //The API is bad designed and you need the variables added manually.
             }
         }
+    }
+
+    override fun getDogsBreed(dogsBreed: String): Flow<Resource<DogBreed>> = flow {
+//        emit(Resource.Loading())
+        try {
+            val dogsBreed = dogsApi.getBreedCollection(dogsBreed)
+            emit(Resource.Success(data = dogsBreed))
+
+        } catch (e: HttpException) {
+            emit(
+                Resource.Error(
+                    message = e.localizedMessage ?: "The breed selected could not be loaded"
+                )
+            )
+        } catch (e: IOException) {
+            emit(Resource.Error(message = "Check your internet connection"))
+        }
+
     }
 
 }

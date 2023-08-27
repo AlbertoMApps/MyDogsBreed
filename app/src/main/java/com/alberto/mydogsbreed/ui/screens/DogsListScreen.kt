@@ -10,9 +10,11 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.alberto.mydogsbreed.presentation.DogsViewModel
+import com.alberto.mydogsbreed.ui.theme.MyDogsBreedTheme
 
 @Composable
 fun DogsList(
@@ -20,14 +22,14 @@ fun DogsList(
 ) {
     viewModel.getDogsList()
     val isLoading = viewModel.dogsListState.value.isLoading
-    val dogData = viewModel.dogsListState.value.data
+    val dogsData = viewModel.dogsListState.value.data
     if (!isLoading) {
         AnimatedVisibility(
             visible = true,
             enter = slideInVertically(),
             exit = slideOutVertically()
         ) {
-            DogsListScreen(dogData)
+            DogsListScreen(dogsData)
         }
     } else {
         CircularProgressIndicator(
@@ -39,16 +41,28 @@ fun DogsList(
 }
 
 @Composable
-fun DogsListScreen(dogData: List<String>) {
+fun DogsListScreen(dogsData: List<String>) {
     LazyColumn(
         modifier = Modifier
             .padding(vertical = 4.dp)
     ) {
-        items(items = dogData) { dogsName ->
-            DogsListItemScreen(
+        items(items = dogsData) { dogsName ->
+            DogsBreedScreen(
                 dogsName.replaceFirstChar { it.uppercase() },
                 {})
         }
     }
 
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun DogsListScreenPreview() {
+    MyDogsBreedTheme {
+        DogsListScreen(
+            dogsData = listOf(
+                "akita", "husky", "beagle"
+            )
+        )
+    }
 }

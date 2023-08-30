@@ -48,7 +48,7 @@ fun DogsBreedScreen(
             )
             Text(
                 text = dogsName,
-                modifier = Modifier.padding(top = 4.dp, bottom = 4.dp, end = 24.dp)
+                modifier = Modifier.padding(all = 4.dp)
             )
             Spacer(
                 Modifier
@@ -57,7 +57,7 @@ fun DogsBreedScreen(
             )
             Icon(
                 Icons.Rounded.ArrowForward,
-                modifier = Modifier.padding(start = 24.dp, top = 4.dp, bottom = 4.dp, end = 4.dp),
+                modifier = Modifier.padding(start = 4.dp, top = 4.dp, bottom = 4.dp, end = 24.dp),
                 contentDescription = null
             )
         }

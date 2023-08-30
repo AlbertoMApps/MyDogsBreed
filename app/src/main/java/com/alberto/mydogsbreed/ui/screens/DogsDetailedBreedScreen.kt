@@ -7,6 +7,10 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,11 +22,18 @@ import com.alberto.mydogsbreed.ui.theme.MyDogsBreedTheme
 
 @Composable
 fun DogsDetailedBreed(
-    viewModel: DogsViewModel = hiltViewModel()
+    viewModel: DogsViewModel = hiltViewModel(),
+    dogsBreed: String
 ) {
-    viewModel.getDogsBreed("akita")
-    val dogBreedImages = viewModel.dogsBreedState.value.data.images
-    DogsDetailedBreedScreen(dogBreedImages)
+    var imagesRefreshCount by remember { mutableIntStateOf(0) }
+    var firstDogBreedImages = arrayListOf<String>()
+    viewModel.getDogsBreed(dogsBreed)
+    val dogBreedRandomImages = viewModel.dogsBreedState.value.data.images
+    if (imagesRefreshCount < 300 && dogBreedRandomImages.isNotEmpty()) {
+        firstDogBreedImages = dogBreedRandomImages
+        imagesRefreshCount++
+    }
+    DogsDetailedBreedScreen(firstDogBreedImages)
 }
 
 @Composable

@@ -2,7 +2,7 @@ package com.alberto.mydogsbreed.data.repository
 
 import com.alberto.mydogsbreed.data.remote.api.DogsApi
 import com.alberto.mydogsbreed.data.remote.model.DogBreed
-import com.alberto.mydogsbreed.data.remote.model.Message
+import com.alberto.mydogsbreed.data.remote.model.BreedsMessage
 import com.alberto.mydogsbreed.domain.DogsRepositoryService
 import com.alberto.mydogsbreed.utils.Resource
 import kotlinx.coroutines.flow.Flow
@@ -23,7 +23,7 @@ class DogsRepositoryImplementation @Inject constructor(
         try {
             val dogsBreedList = arrayListOf<String>()
             val dogsList = dogsApi.getAllBreeds()
-            dogsList.message?.apply {
+            dogsList.breedsMessage?.apply {
                 addDogsBreedList(this, dogsBreedList)
             }
             emit(Resource.Success(data = dogsBreedList))
@@ -43,7 +43,7 @@ class DogsRepositoryImplementation @Inject constructor(
     /**
      * This method will add a list of breeds returned from the API
      */
-    private fun addDogsBreedList(message: Message, dogsBreedList: ArrayList<String>) {
+    private fun addDogsBreedList(message: BreedsMessage, dogsBreedList: ArrayList<String>) {
         message.apply {
             dogsBreedList.apply {
                 add(::affenpinscher.name)
@@ -130,7 +130,7 @@ class DogsRepositoryImplementation @Inject constructor(
     }
 
     override fun getDogsBreed(dogsBreed: String): Flow<Resource<DogBreed>> = flow {
-//        emit(Resource.Loading())
+        emit(Resource.Loading())
         try {
             val dogsBreed = dogsApi.getBreedCollection(dogsBreed)
             emit(Resource.Success(data = dogsBreed))

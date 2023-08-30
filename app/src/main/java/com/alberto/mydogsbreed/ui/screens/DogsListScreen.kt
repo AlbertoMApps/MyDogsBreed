@@ -13,12 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.alberto.mydogsbreed.presentation.DogsViewModel
 import com.alberto.mydogsbreed.ui.theme.MyDogsBreedTheme
 
 @Composable
 fun DogsList(
-    viewModel: DogsViewModel = hiltViewModel()
+    viewModel: DogsViewModel = hiltViewModel(),
+    navigation: NavHostController
 ) {
     viewModel.getDogsList()
     val isLoading = viewModel.dogsListState.value.isLoading
@@ -29,7 +32,7 @@ fun DogsList(
             enter = slideInVertically(),
             exit = slideOutVertically()
         ) {
-            DogsListScreen(dogsData)
+            DogsListScreen(dogsData, navigation)
         }
     } else {
         CircularProgressIndicator(
@@ -41,15 +44,17 @@ fun DogsList(
 }
 
 @Composable
-fun DogsListScreen(dogsData: List<String>) {
+fun DogsListScreen(dogsData: List<String>, navigation: NavHostController) {
     LazyColumn(
         modifier = Modifier
             .padding(vertical = 4.dp)
     ) {
         items(items = dogsData) { dogsName ->
             DogsBreedScreen(
-                dogsName.replaceFirstChar { it.uppercase() },
-                {})
+                dogsName.replaceFirstChar { it.uppercase() }
+            ) {
+                navigation.navigate(Screen.DogsDetailedBreed.route.plus("/${dogsName}"))
+            }
         }
     }
 
@@ -62,7 +67,8 @@ private fun DogsListScreenPreview() {
         DogsListScreen(
             dogsData = listOf(
                 "akita", "husky", "beagle"
-            )
+            ),
+            navigation = rememberNavController()
         )
     }
 }

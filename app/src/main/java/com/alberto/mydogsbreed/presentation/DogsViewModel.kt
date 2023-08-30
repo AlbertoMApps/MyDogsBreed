@@ -51,7 +51,7 @@ class DogsViewModel @Inject constructor(
                     is Resource.Error -> {
                         _dogsListState.value = DogsViewState(
                             errorMessage = result.message
-                                ?: "Unexpected error loading a dog's breed list"
+                                ?: "Unexpected error loading dog's breeds"
                         )
                     }
                 }
@@ -80,7 +80,7 @@ class DogsViewModel @Inject constructor(
                     is Resource.Error -> {
                         _dogsBreedState.value = DogsBreedViewState(
                             errorMessage = result.message
-                                ?: "Unexpected error loading a dog's breed"
+                                ?: "Unexpected error loading a dog's breed: $dogsBreed"
                         )
                     }
                 }

@@ -23,7 +23,7 @@ class DogsRepositoryImplementation @Inject constructor(
      * This method will get a list of breeds
      */
     override fun getDogsList(): Flow<Resource<List<String>>> = flow {
-//        emit(Resource.Loading())
+        emit(Resource.Loading())
         try {
             val dogsBreedList = arrayListOf<String>()
             val dogsList = dogsApi.getAllBreeds()

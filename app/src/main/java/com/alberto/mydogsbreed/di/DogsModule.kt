@@ -1,7 +1,11 @@
 package com.alberto.mydogsbreed.di
 
+import android.app.Application
 import android.util.Log
+import androidx.room.Room
 import com.alberto.mydogsbreed.data.common.DOGS_API_BASE_URL
+import com.alberto.mydogsbreed.data.local.dao.DogBreedDao
+import com.alberto.mydogsbreed.data.local.database.DogBreedDatabase
 import com.alberto.mydogsbreed.data.remote.api.DogsApi
 import com.alberto.mydogsbreed.data.repository.DogsRepositoryImplementation
 import com.alberto.mydogsbreed.domain.DogsRepositoryService
@@ -71,10 +75,24 @@ object DogsModule {
     @Provides
     @Singleton
     fun provideDogsRepositoryImplementation(
-        api: DogsApi
+        api: DogsApi,
+        dao: DogBreedDao
     ): DogsRepositoryService =
         DogsRepositoryImplementation(
-            api
+            api,
+            dao
         )
+
+    @Provides
+    fun provideDogBreedDatabase(application: Application): DogBreedDatabase =
+        Room.databaseBuilder(
+            application,
+            DogBreedDatabase::class.java,
+            "dog_breed_db"
+        ).build()
+
+    @Provides
+    fun provideCoinPaprikaDao(db: DogBreedDatabase): DogBreedDao =
+        db.getDogBreedDao()
 
 }

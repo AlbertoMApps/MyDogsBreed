@@ -4,10 +4,8 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,29 +15,33 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.alberto.mydogsbreed.presentation.DogsViewModel
 import com.alberto.mydogsbreed.ui.theme.MyDogsBreedTheme
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 @Composable
 fun DogsList(
     viewModel: DogsViewModel = hiltViewModel(),
     navigation: NavHostController
 ) {
-    viewModel.getDogsList()
     val isLoading = viewModel.dogsListState.value.isLoading
     val dogsData = viewModel.dogsListState.value.data
-    if (!isLoading) {
+    val errorMessage = viewModel.dogsListState.value.errorMessage
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = isLoading)
+
+    SwipeRefresh(
+        state = swipeRefreshState,
+        onRefresh = viewModel::getDogsList
+    ) {
         AnimatedVisibility(
-            visible = true,
+            visible = !swipeRefreshState.isRefreshing,
             enter = slideInVertically(),
             exit = slideOutVertically()
         ) {
             DogsListScreen(dogsData, navigation)
         }
-    } else {
-        CircularProgressIndicator(
-            Modifier.size(
-                24.dp
-            )
-        )
+    }
+    if (errorMessage.isNotEmpty()) {
+        ErrorLabel(errorMessage = errorMessage)
     }
 }
 

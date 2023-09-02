@@ -28,7 +28,7 @@ fun DogsListNavigation() {
             it.arguments?.getString(DOGS_BREED_ARG)?.let {
                 if (it.isNotEmpty()) {
                     DogsDetailedBreed(
-                        dogsBreed = it
+                        dogBreed = it
                     )
                 }
             }

@@ -6,6 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface DogsRepositoryService {
     fun getDogsList(): Flow<Resource<List<String>>>
-    fun getDogsBreed(dogsBreed: String): Flow<Resource<DogBreed>>
+    fun getDogsBreed(dogBreed: String): Flow<Resource<DogBreed>>
 
 }

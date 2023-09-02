@@ -8,6 +8,7 @@ import com.alberto.mydogsbreed.domain.DogsRepositoryService
 import com.alberto.mydogsbreed.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -59,32 +60,36 @@ class DogsViewModel @Inject constructor(
         }
     }
 
-    fun getDogsBreed(dogsBreed: String) {
+    fun getDogsBreed(dogBreed: String) {
+        dogsJob?.cancel()
         dogsBreedJob?.cancel()
         dogsBreedJob = viewModelScope.launch {
-            dogsRepositoryService.getDogsBreed(dogsBreed).onEach { result ->
+            dogsRepositoryService.getDogsBreed(dogBreed).first { result ->
                 when (result) {
                     is Resource.Loading -> {
                         _dogsBreedState.value = DogsBreedViewState(
                             isLoading = true,
                             data = result.data ?: DogBreed()
                         )
+                        true
                     }
 
                     is Resource.Success -> {
                         _dogsBreedState.value = DogsBreedViewState(
                             data = result.data ?: DogBreed()
                         )
+                        true
                     }
 
                     is Resource.Error -> {
                         _dogsBreedState.value = DogsBreedViewState(
                             errorMessage = result.message
-                                ?: "Unexpected error loading a dog's breed: $dogsBreed"
+                                ?: "Unexpected error loading a dog's breed: $dogBreed"
                         )
+                        true
                     }
                 }
-            }.launchIn(this)
+            }
         }
     }
 

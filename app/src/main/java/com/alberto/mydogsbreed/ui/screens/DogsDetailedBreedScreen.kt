@@ -7,10 +7,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
@@ -23,21 +19,22 @@ import com.alberto.mydogsbreed.ui.theme.MyDogsBreedTheme
 @Composable
 fun DogsDetailedBreed(
     viewModel: DogsViewModel = hiltViewModel(),
-    dogsBreed: String
+    dogBreed: String
 ) {
-    var imagesRefreshCount by remember { mutableIntStateOf(0) }
-    var firstDogBreedImages = arrayListOf<String>()
-    viewModel.getDogsBreed(dogsBreed)
+    viewModel.getDogsBreed(dogBreed)
     val dogBreedRandomImages = viewModel.dogsBreedState.value.data.images
-    if (imagesRefreshCount < 300 && dogBreedRandomImages.isNotEmpty()) {
-        firstDogBreedImages = dogBreedRandomImages
-        imagesRefreshCount++
+    val errorMessage = viewModel.dogsBreedState.value.errorMessage
+
+    dogBreedRandomImages?.let { DogsDetailedBreedScreen(it) }
+
+    if (errorMessage.isNotEmpty()) {
+        ErrorLabel(errorMessage = errorMessage)
     }
-    DogsDetailedBreedScreen(firstDogBreedImages)
+
 }
 
 @Composable
-fun DogsDetailedBreedScreen(dogBreedImages: ArrayList<String>) {
+fun DogsDetailedBreedScreen(dogBreedImages: List<String>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(8.dp),

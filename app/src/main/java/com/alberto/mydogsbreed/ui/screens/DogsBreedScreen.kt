@@ -19,6 +19,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
+const val TAG_DOGS_BREED_SCREEN = "TAG_DOGS_BREED_SCREEN"
+
 @Composable
 fun DogsBreedScreen(
     dogsName: String,

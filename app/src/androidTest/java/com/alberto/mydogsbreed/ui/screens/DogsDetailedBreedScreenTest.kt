@@ -36,7 +36,7 @@ class DogsDetailedBreedScreenTest {
 
     @Test
     fun testDogBreedListScreenView() {
-        composeTestRule.onNodeWithTag("TAG_DOGS_BREED_SCREEN").assertExists()
+        composeTestRule.onNodeWithTag(TAG_DOGS_BREED_SCREEN).assertExists()
             .performScrollToIndex(0)
             .performScrollToIndex(1)
             .performScrollToIndex(2)

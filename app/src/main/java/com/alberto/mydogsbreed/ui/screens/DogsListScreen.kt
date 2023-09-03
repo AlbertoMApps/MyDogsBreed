@@ -19,6 +19,8 @@ import com.alberto.mydogsbreed.ui.theme.MyDogsBreedTheme
 import com.google.accompanist.swiperefresh.SwipeRefresh
 import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
+const val TAG_DOGS_LIST_SCREEN = "TAG_DOGS_LIST_SCREEN"
+
 @Composable
 fun DogsList(
     viewModel: DogsViewModel = hiltViewModel(),
@@ -51,7 +53,7 @@ fun DogsListScreen(dogsData: List<String>, navigation: NavHostController) {
     LazyColumn(
         modifier = Modifier
             .padding(vertical = 4.dp)
-            .testTag("TAG_DOGS_LIST_SCREEN")
+            .testTag(TAG_DOGS_LIST_SCREEN)
     ) {
         items(items = dogsData) { dogsName ->
             DogsBreedScreen(

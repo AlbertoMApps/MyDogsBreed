@@ -43,6 +43,12 @@ class DogsDetailedBreedScreenTest {
             .performScrollToIndex(3)
             .performScrollToIndex(4)
             .performScrollToIndex(5)
+            .performScrollToIndex(0)
+            .performScrollToIndex(1)
+            .performScrollToIndex(2)
+            .performScrollToIndex(3)
+            .performScrollToIndex(4)
+            .performScrollToIndex(5)
     }
 
 }

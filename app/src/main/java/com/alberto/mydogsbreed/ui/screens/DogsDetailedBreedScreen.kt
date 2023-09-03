@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -39,7 +40,8 @@ fun DogsDetailedBreedScreen(dogBreedImages: List<String>) {
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        contentPadding = PaddingValues(all = 16.dp)
+        contentPadding = PaddingValues(all = 16.dp),
+        modifier = Modifier.testTag("TAG_DOGS_BREED_SCREEN")
     ) {
         items(items = dogBreedImages) { image ->
             AsyncImage(

@@ -66,14 +66,6 @@ class DogsViewModel @Inject constructor(
         dogsBreedJob = viewModelScope.launch {
             dogsRepositoryService.getDogsBreed(dogBreed).first { result ->
                 when (result) {
-                    is Resource.Loading -> {
-                        _dogsBreedState.value = DogsBreedViewState(
-                            isLoading = true,
-                            data = result.data ?: DogBreed()
-                        )
-                        true
-                    }
-
                     is Resource.Success -> {
                         _dogsBreedState.value = DogsBreedViewState(
                             data = result.data ?: DogBreed()
@@ -81,7 +73,7 @@ class DogsViewModel @Inject constructor(
                         true
                     }
 
-                    is Resource.Error -> {
+                    else -> {
                         _dogsBreedState.value = DogsBreedViewState(
                             errorMessage = result.message
                                 ?: "Unexpected error loading a dog's breed: $dogBreed"

@@ -1,10 +1,7 @@
 package com.alberto.mydogsbreed.data.repository
 
-import com.alberto.mydogsbreed.data.local.dao.DogBreedDao
-import com.alberto.mydogsbreed.data.mapper.toDogBreedTable
 import com.alberto.mydogsbreed.data.remote.api.DogsApi
-import com.alberto.mydogsbreed.utils.getBreed
-import com.alberto.mydogsbreed.utils.getDog
+import com.alberto.mydogsbreed.getRandomBreedImages
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -23,73 +20,41 @@ import retrofit2.Response
 class DogsRepositoryImplementationTest {
 
     @Mock
-    private lateinit var api: DogsApi
-
-    @Mock
-    private lateinit var dao: DogBreedDao
-    private lateinit var repositoryService: DogsRepositoryImplementation
+    private lateinit var dogsApiService: DogsApi
+    private lateinit var dogsRepository: DogsRepositoryImplementation
 
     @Before
     fun setUp() {
         MockitoAnnotations.openMocks(this)
-        repositoryService =
-            DogsRepositoryImplementation(api, dao)
+        dogsRepository =
+            DogsRepositoryImplementation(dogsApiService)
     }
 
     @Test
-    fun `When getDogsList() is successful, then return a list of dogs from the dogs API`() =
+    fun `When we get random images, then we need to make sure they exist`() =
         runTest {
-            whenever(api.getAllBreeds())
-                .thenReturn(getDog())
+            whenever(dogsApiService.getRandomDogsImages())
+                .thenReturn(getRandomBreedImages())
 
-            val result = repositoryService.getDogsList().toList()
-            getDog().breedsMessage?.apply {
-                assertEquals(::akita.name, result[1].toString())
-            }
+            val result = dogsRepository.getRandomDogsImages().toList()
+            assertEquals(getRandomBreedImages().images, result[1].data)
         }
 
     @Test
-    fun `When getDogsList() has an http connection error, then return an error`() = runTest {
-        whenever(api.getAllBreeds())
-            .thenThrow(
-                HttpException(
-                    Response.error<Any>(403, ResponseBody.create("plain/text".toMediaType(), ""))
+    fun `When we get random images and an unexpected error occurred, then return a 403 error`() =
+        runTest {
+            whenever(dogsApiService.getRandomDogsImages())
+                .thenThrow(
+                    HttpException(
+                        Response.error<Any>(
+                            403,
+                            ResponseBody.create("plain/text".toMediaType(), "")
+                        )
+                    )
                 )
-            )
 
-        val result = repositoryService.getDogsList().toList()
-        assertEquals("HTTP 403 Response.error()", result[1].message)
-    }
-
-    @Test
-    fun `When getDogsBreed() is successful, then return images of a breed`() = runTest {
-        whenever(api.getBreedCollection("Akita"))
-            .thenReturn(getBreed())
-        whenever(dao.getDogBreed("Akita"))
-            .thenReturn(getBreed().toDogBreedTable("Akita"))
-
-        val result = repositoryService.getDogsBreed("Akita").toList()
-        assertEquals("Akita", result[0].data?.breed)
-        assertEquals(
-            "https://images.dog.ceo/breeds/hound-basset/n02088238_8839.jpg",
-            result[0].data?.images?.get(0) ?: ""
-        )
-        assertEquals(
-            "https://images.dog.ceo/breeds/hound-basset/n02088238_8839.jpg",
-            result[0].data?.images?.get(1) ?: ""
-        )
-    }
-
-    @Test
-    fun `When getDogsBreed() has an http connection error, then return an error`() = runTest {
-        whenever(api.getBreedCollection("Akita"))
-            .thenThrow(
-                HttpException(
-                    Response.error<Any>(403, ResponseBody.create("plain/text".toMediaType(), ""))
-                )
-            )
-        val result = repositoryService.getDogsBreed("Akita").toList()
-        assertEquals("HTTP 403 Response.error()", result[0].message)
-    }
+            val result = dogsRepository.getRandomDogsImages().toList()
+            assertEquals("HTTP 403 Response.error()", result[1].message)
+        }
 
 }

@@ -15,35 +15,42 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.alberto.mydogsbreed.presentation.DogsViewModel
-import com.alberto.mydogsbreed.ui.theme.MyDogsBreedTheme
+import com.alberto.mydogsbreed.ui.theme.MyDogsTheme
 
 @Composable
-fun DogsDetailedBreed(
-    viewModel: DogsViewModel = hiltViewModel(),
-    dogBreed: String
+fun DogsScreen(
+    viewModel: DogsViewModel = hiltViewModel()
 ) {
-    viewModel.getDogsBreed(dogBreed)
-    val dogBreedRandomImages = viewModel.dogsBreedState.value.data.images
-    val errorMessage = viewModel.dogsBreedState.value.errorMessage
+    val dogsViewState = viewModel.dogsState.value
 
-    dogBreedRandomImages?.let { DogsDetailedBreedScreen(it) }
+    when {
+        dogsViewState.isLoading -> {
+            LoadingScreen()
+            viewModel.getRandomDogsImages()
+        }
 
-    if (errorMessage.isNotEmpty()) {
-        ErrorLabel(errorMessage = errorMessage)
+        dogsViewState.data.isNotEmpty() -> {
+            DogsContentScreen(dogsViewState.data)
+        }
+
+        dogsViewState.errorMessage.isNotEmpty() -> {
+            ErrorLabel(errorMessage = dogsViewState.errorMessage)
+        }
+
     }
 
 }
 
 @Composable
-fun DogsDetailedBreedScreen(dogBreedImages: List<String>) {
+fun DogsContentScreen(dogsImages: List<String>) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(all = 16.dp),
-        modifier = Modifier.testTag("TAG_DOGS_BREED_SCREEN")
+        modifier = Modifier.testTag("TAG_DOGS_IMAGES_SCREEN")
     ) {
-        items(items = dogBreedImages) { image ->
+        items(items = dogsImages) { image ->
             AsyncImage(
                 model = image,
                 contentDescription = null,
@@ -56,10 +63,10 @@ fun DogsDetailedBreedScreen(dogBreedImages: List<String>) {
 
 @Preview(showBackground = true)
 @Composable
-private fun DogsDetailedBreedScreenPreview() {
-    MyDogsBreedTheme {
-        DogsDetailedBreedScreen(
-            dogBreedImages = arrayListOf(
+private fun DogsContentScreenPreview() {
+    MyDogsTheme {
+        DogsContentScreen(
+            dogsImages = listOf(
                 "https://images.dog.ceo/breeds/hound-afghan/n02088094_4037.jpg",
                 "https://images.dog.ceo/breeds/hound-basset/n02088238_8839.jpg",
                 "https://images.dog.ceo/breeds/hound-blood/n02088466_10831.jpg",

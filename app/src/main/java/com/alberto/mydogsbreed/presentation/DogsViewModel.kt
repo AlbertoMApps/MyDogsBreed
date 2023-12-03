@@ -3,12 +3,10 @@ package com.alberto.mydogsbreed.presentation
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.alberto.mydogsbreed.data.remote.model.DogBreed
 import com.alberto.mydogsbreed.domain.DogsRepositoryService
 import com.alberto.mydogsbreed.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
@@ -20,68 +18,38 @@ class DogsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var dogsJob: Job? = null
-    private val _dogsListState = mutableStateOf(DogsViewState())
-    val dogsListState = _dogsListState
-
-    private var dogsBreedJob: Job? = null
-    private val _dogsBreedState = mutableStateOf(DogsBreedViewState())
-    val dogsBreedState = _dogsBreedState
+    private val _dogsState = mutableStateOf(DogsImagesViewState())
+    val dogsState = _dogsState
 
     init {
-        getDogsList()
+        getRandomDogsImages()
     }
 
-    fun getDogsList() {
+    fun getRandomDogsImages() {
         dogsJob?.cancel()
         dogsJob = viewModelScope.launch {
-            dogsRepositoryService.getDogsList().onEach { result ->
+            dogsRepositoryService.getRandomDogsImages().onEach { result ->
                 when (result) {
                     is Resource.Loading -> {
-                        _dogsListState.value = DogsViewState(
-                            isLoading = true,
-                            data = result.data ?: listOf()
+                        _dogsState.value = DogsImagesViewState(
+                            isLoading = true
                         )
                     }
 
                     is Resource.Success -> {
-                        _dogsListState.value = DogsViewState(
+                        _dogsState.value = DogsImagesViewState(
                             data = result.data ?: listOf()
                         )
                     }
 
-                    is Resource.Error -> {
-                        _dogsListState.value = DogsViewState(
+                    else -> {
+                        _dogsState.value = DogsImagesViewState(
                             errorMessage = result.message
-                                ?: "Unexpected error loading dog's breeds"
+                                ?: "Unexpected error loading random dogs images"
                         )
                     }
                 }
             }.launchIn(this)
-        }
-    }
-
-    fun getDogsBreed(dogBreed: String) {
-        dogsJob?.cancel()
-        dogsBreedJob?.cancel()
-        dogsBreedJob = viewModelScope.launch {
-            dogsRepositoryService.getDogsBreed(dogBreed).first { result ->
-                when (result) {
-                    is Resource.Success -> {
-                        _dogsBreedState.value = DogsBreedViewState(
-                            data = result.data ?: DogBreed()
-                        )
-                        true
-                    }
-
-                    else -> {
-                        _dogsBreedState.value = DogsBreedViewState(
-                            errorMessage = result.message
-                                ?: "Unexpected error loading a dog's breed: $dogBreed"
-                        )
-                        true
-                    }
-                }
-            }
         }
     }
 

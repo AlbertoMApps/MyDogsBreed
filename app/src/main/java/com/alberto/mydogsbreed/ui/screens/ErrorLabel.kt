@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
-import com.alberto.mydogsbreed.ui.theme.MyDogsBreedTheme
+import com.alberto.mydogsbreed.ui.theme.MyDogsTheme
 
 @Composable
 fun ErrorLabel(errorMessage: String) {
@@ -30,7 +30,7 @@ fun ErrorLabel(errorMessage: String) {
 @Preview(showBackground = true)
 @Composable
 private fun ErrorLabelPreview() {
-    MyDogsBreedTheme {
+    MyDogsTheme {
         ErrorLabel("Dummy error")
     }
 }

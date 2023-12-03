@@ -32,7 +32,7 @@ private val LightColorScheme = lightColors(
 )
 
 @Composable
-fun MyDogsBreedTheme(
+fun MyDogsTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit
 ) {

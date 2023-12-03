@@ -17,6 +17,8 @@ import coil.compose.AsyncImage
 import com.alberto.mydogsbreed.presentation.DogsViewModel
 import com.alberto.mydogsbreed.ui.theme.MyDogsTheme
 
+const val tagDogsImagesGridScreen = "TAG_DOGS_IMAGES_GRID_SCREEN"
+
 @Composable
 fun DogsScreen(
     viewModel: DogsViewModel = hiltViewModel()
@@ -48,7 +50,7 @@ fun DogsContentScreen(dogsImages: List<String>) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp),
         contentPadding = PaddingValues(all = 16.dp),
-        modifier = Modifier.testTag("TAG_DOGS_IMAGES_SCREEN")
+        modifier = Modifier.testTag(tagDogsImagesGridScreen)
     ) {
         items(items = dogsImages) { image ->
             AsyncImage(

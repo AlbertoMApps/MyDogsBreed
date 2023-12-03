@@ -36,7 +36,7 @@ class DogsScreenTest {
 
     @Test
     fun dogsContentScreenTest() {
-        composeTestRule.onNodeWithTag("TAG_DOGS_IMAGES_SCREEN").assertExists()
+        composeTestRule.onNodeWithTag(tagDogsImagesGridScreen).assertExists()
             .performScrollToIndex(0)
             .performScrollToIndex(1)
             .performScrollToIndex(2)

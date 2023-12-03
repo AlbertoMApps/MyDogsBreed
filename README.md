@@ -7,7 +7,8 @@ List of random dog's images
 * PROJECT EXPLANATION:
 
   The main project test a list of random images of dogs.
-  The data is fetched from the Dogs API to get those images.
+  The data is fetched from this Dogs API https://dog.ceo/dog-api/documentation/random to get a list
+  of images.
   That screen represent a list of dog's images that when the page is refreshed gets other random
   images.
 

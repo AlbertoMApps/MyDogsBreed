@@ -16,6 +16,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import coil.compose.AsyncImage
 import com.alberto.mydogsbreed.presentation.DogsViewModel
 import com.alberto.mydogsbreed.ui.theme.MyDogsTheme
+import com.google.accompanist.swiperefresh.SwipeRefresh
+import com.google.accompanist.swiperefresh.rememberSwipeRefreshState
 
 const val tagDogsImagesGridScreen = "TAG_DOGS_IMAGES_GRID_SCREEN"
 
@@ -24,15 +26,16 @@ fun DogsScreen(
     viewModel: DogsViewModel = hiltViewModel()
 ) {
     val dogsViewState = viewModel.dogsState.value
+    val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = dogsViewState.isLoading)
 
     when {
-        dogsViewState.isLoading -> {
-            LoadingScreen()
-            viewModel.getRandomDogsImages()
-        }
-
         dogsViewState.data.isNotEmpty() -> {
-            DogsContentScreen(dogsViewState.data)
+            SwipeRefresh(
+                state = swipeRefreshState,
+                onRefresh = { viewModel.getRandomDogsImages() }
+            ) {
+                DogsContentScreen(dogsViewState.data)
+            }
         }
 
         dogsViewState.errorMessage.isNotEmpty() -> {

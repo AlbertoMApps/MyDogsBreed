@@ -7,8 +7,9 @@ List of random dog's images
 * PROJECT EXPLANATION:
 
   The main project test a list of random images of dogs.
-  The first one is fetching data from the Dogs API to get those images.
-  That screen represent a list of dog's images.
+  The data is fetched from the Dogs API to get those images.
+  That screen represent a list of dog's images that when the page is refreshed gets other random
+  images.
 
 * DESIGN PATTERS:
 
@@ -41,8 +42,6 @@ List of random dog's images
 10. Mockito - Main testing tool for mocking object injections and unit testing the presentation and
     repositories of the project.
 
-* What would I improve if I had more time?
+* What would I implement/improve if I had more time?
 
-  Probably I'd implement a swipe to refresh to call the list of images and get continuously random
-  ones.
-  also I'd add a caching mechanism like Room database.
+  Probably I'd implement a caching mechanism for images like a Room database.

@@ -7,6 +7,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
@@ -25,7 +26,12 @@ const val tagDogsImagesGridScreen = "TAG_DOGS_IMAGES_GRID_SCREEN"
 fun DogsScreen(
     viewModel: DogsViewModel = hiltViewModel()
 ) {
-    val dogsViewState = viewModel.dogsState.value
+    val dogsViewState = viewModel.dogsState.collectAsState().value
+    dogsViewState.copy(
+        isLoading = false,
+        data = listOf(),
+        errorMessage = ""
+    )// This copy here won't update the state as source of truth since the state will keep mutable
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = dogsViewState.isLoading)
 
     when {

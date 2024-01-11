@@ -1,14 +1,13 @@
 package com.alberto.mydogsbreed.presentation
 
-import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.alberto.mydogsbreed.domain.DogsRepositoryService
 import com.alberto.mydogsbreed.utils.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,17 +17,17 @@ class DogsViewModel @Inject constructor(
 ) : ViewModel() {
 
     private var dogsJob: Job? = null
-    private val _dogsState = mutableStateOf(DogsImagesViewState())
-    val dogsState = _dogsState
+    private val _dogsState = MutableStateFlow(DogsImagesViewState())
+    val dogsState = _dogsState.asStateFlow()
 
     init {
         getRandomDogsImages()
     }
 
     fun getRandomDogsImages() {
-        dogsJob?.cancel()
+        dogsJob?.cancel()//This is to cancel any asynchronous calls that come back in the future.
         dogsJob = viewModelScope.launch {
-            dogsRepositoryService.getRandomDogsImages().onEach { result ->
+            dogsRepositoryService.getRandomDogsImages().collect { result ->
                 when (result) {
                     is Resource.Loading -> {
                         _dogsState.value = DogsImagesViewState(
@@ -49,7 +48,7 @@ class DogsViewModel @Inject constructor(
                         )
                     }
                 }
-            }.launchIn(this)
+            }
         }
     }
 

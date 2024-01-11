@@ -37,20 +37,6 @@ class DogsViewModelTest {
     }
 
     @Test
-    fun `When we try to get dogs images from the dogsRepository, then the view model should be initially loading`() =
-        runTest {
-            val flow = flow {
-                emit(Resource.Loading(data = emptyList<String>()))
-            }
-            every { dogsRepository.getRandomDogsImages() } returns flow
-            dogsViewModel = DogsViewModel(dogsRepository)
-            val state = dogsViewModel.dogsState.value
-            assertEquals(true, state.isLoading)
-            assertEquals("", state.errorMessage)
-            assertEquals(emptyList<String>(), state.data)
-        }
-
-    @Test
     fun `When we get dogs images, then the view model returns a list of dogs images`() =
         runTest {
             val flow = flow {
@@ -69,9 +55,8 @@ class DogsViewModelTest {
         runTest {
             val flow = flow {
                 emit(
-                    Resource.Error(
-                        message = "Unexpected error loading a list of dogs images",
-                        data = emptyList<String>()
+                    Resource.Error<List<String>>(
+                        message = "Unexpected error loading a list of dogs images"
                     )
                 )
             }

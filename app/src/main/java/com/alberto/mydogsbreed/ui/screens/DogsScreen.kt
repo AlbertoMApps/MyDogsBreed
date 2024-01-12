@@ -31,7 +31,7 @@ fun DogsScreen(
         isLoading = false,
         data = listOf(),
         errorMessage = ""
-    )// This copy here won't update the state as source of truth since the state will keep mutable
+    )// This copy here won't update the state as source of truth since the state will keep inmutable
     val swipeRefreshState = rememberSwipeRefreshState(isRefreshing = dogsViewState.isLoading)
 
     when {
